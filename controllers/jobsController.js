@@ -1,4 +1,4 @@
-import { connection } from '../db/db.js';
+import { pool } from '../db/db.js';
 import axios from 'axios';
 
 const fetchJobsForSkill = async (skill, location, jobType) => {
@@ -23,8 +23,8 @@ const fetchJobsForSkill = async (skill, location, jobType) => {
         date_posted: 'all'
       },
       headers: {
-     'x-rapidapi-key': 'd83aec77e6msh027e06524907233p17ab73jsn764cd4d9f43d',
-		'x-rapidapi-host': 'jsearch.p.rapidapi.com'
+        'x-rapidapi-key': 'd83aec77e6msh027e06524907233p17ab73jsn764cd4d9f43d',
+        'x-rapidapi-host': 'jsearch.p.rapidapi.com'
       }
     };
 
@@ -140,7 +140,7 @@ const getJobsById = async (req, res) => {
       JOIN skills ON user_skills.skill_id = skills.skill_id 
       WHERE user_skills.user_id = ?;
     `;
-    const [skills] = await connection.promise().query(query, [userId]);
+    const [skills] = await pool.query(query, [userId]);
 
     if (!skills.length) {
       return res.status(404).json({ message: 'No skills found for this user.' });

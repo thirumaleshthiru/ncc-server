@@ -1,4 +1,4 @@
-import { connection } from '../db/db.js';
+import { pool } from '../db/db.js';
 
 const addResource = async (req, res) => {
   const { type, resource_name, resource_description, content, suggested_skill, mentor_id } = req.body;
@@ -12,7 +12,7 @@ const addResource = async (req, res) => {
       INSERT INTO resources (type, resource_name, resource_description, content, suggested_skill, mentor_id)
       VALUES (?, ?, ?, ?, ?, ?)
     `;
-    await connection.promise().query(query, [type, resource_name, resource_description, content, suggested_skill, mentor_id]);
+    await pool.query(query, [type, resource_name, resource_description, content, suggested_skill, mentor_id]);
 
     res.status(201).json({ message: 'Resource added successfully.' });
   } catch (error) {
@@ -34,7 +34,7 @@ const updateResource = async (req, res) => {
       SET resource_name = ?, resource_description = ?, content = ?, suggested_skill = ?, type = ?, updated_at = CURRENT_TIMESTAMP
       WHERE resource_id = ?
     `;
-    const [result] = await connection.promise().query(query, [resource_name, resource_description, content, suggested_skill, type, resource_id]);
+    const [result] = await pool.query(query, [resource_name, resource_description, content, suggested_skill, type, resource_id]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Resource not found.' });
@@ -57,7 +57,7 @@ const deleteResource = async (req, res) => {
     const query = `
       DELETE FROM resources WHERE resource_id = ?
     `;
-    const [result] = await connection.promise().query(query, [resource_id]);
+    const [result] = await pool.query(query, [resource_id]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Resource not found.' });
@@ -80,7 +80,7 @@ const getResourcesBySkill = async (req, res) => {
     const query = `
       SELECT * FROM resources WHERE suggested_skill = ?
     `;
-    const [resources] = await connection.promise().query(query, [skill_id]);
+    const [resources] = await pool.query(query, [skill_id]);
 
     if (resources.length === 0) {
       return res.status(404).json({ message: 'No resources found for this skill.' });
@@ -103,7 +103,7 @@ const getMyResources = async (req, res) => {
     const query = `
       SELECT * FROM resources WHERE mentor_id = ?
     `;
-    const [resources] = await connection.promise().query(query, [mentor_id]);
+    const [resources] = await pool.query(query, [mentor_id]);
 
     if (resources.length === 0) {
       return res.status(404).json({ message: 'No resources found for this mentor.' });
@@ -126,7 +126,7 @@ const getResource = async (req, res) => {
     const query = `
       SELECT * FROM resources WHERE resource_id = ?
     `;
-    const [resource] = await connection.promise().query(query, [resource_id]);
+    const [resource] = await pool.query(query, [resource_id]);
 
     if (resource.length === 0) {
       return res.status(404).json({ message: 'Resource not found.' });
@@ -143,7 +143,7 @@ const getAllResources = async (req, res) => {
     const query = `
       SELECT * FROM resources
     `;
-    const [resources] = await connection.promise().query(query);
+    const [resources] = await pool.query(query);
 
     if (resources.length === 0) {
       return res.status(404).json({ message: 'No resources available.' });

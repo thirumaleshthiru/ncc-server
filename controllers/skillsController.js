@@ -1,4 +1,4 @@
-import { connection } from '../db/db.js';
+import { pool } from '../db/db.js';
 
 const addSkill = async (req, res) => {
   const { skillName } = req.body;
@@ -12,7 +12,7 @@ const addSkill = async (req, res) => {
       INSERT INTO skills (skill_name)
       VALUES (?)
     `;
-    await connection.promise().query(query, [skillName]);
+    await pool.query(query, [skillName]);
 
     res.status(201).json({ message: 'Skill added successfully.' });
   } catch (error) {
@@ -31,7 +31,7 @@ const deleteSkill = async (req, res) => {
     const query = `
       DELETE FROM skills WHERE skill_id = ?
     `;
-    await connection.promise().query(query, [skillId]);
+    await pool.query(query, [skillId]);
 
     res.status(200).json({ message: 'Skill deleted successfully.' });
   } catch (error) {
@@ -50,7 +50,7 @@ const getSkill = async (req, res) => {
     const query = `
       SELECT * FROM skills WHERE skill_id = ?
     `;
-    const [rows] = await connection.promise().query(query, [skillId]);
+    const [rows] = await pool.query(query, [skillId]);
 
     if (rows.length === 0) {
       return res.status(404).json({ message: 'Skill not found.' });
@@ -67,7 +67,7 @@ const getAllSkills = async (req, res) => {
     const query = `
       SELECT * FROM skills
     `;
-    const [skills] = await connection.promise().query(query);
+    const [skills] = await pool.query(query);
 
     res.status(200).json({ skills });
   } catch (error) {
