@@ -1,0 +1,108 @@
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    password VARCHAR(255),
+    email varchar(255),
+    is_verified BOOLEAN,
+    verification_link VARCHAR(255),
+    role ENUM('student', 'mentor'),
+    college ENUM('NECN', 'NECG'),
+    bio TEXT,
+    profile_pic VARCHAR(255),
+    is_past_student BOOLEAN DEFAULT FALSE,
+    current_year INT NULL,
+    current_sem INT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE admins (
+    admin_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    password VARCHAR(255),
+    role ENUM('admin'),
+
+    profile_pic VARCHAR(255),
+    is_past_student BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
+
+ 
+
+CREATE TABLE mentors (
+    mentor_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE skills (
+    skill_id INT AUTO_INCREMENT PRIMARY KEY,
+    skill_name VARCHAR(255)
+);
+
+CREATE TABLE user_skills (
+    skill_id INT,
+    user_id INT,
+    FOREIGN KEY (skill_id) REFERENCES skills(skill_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE resources (
+    resource_id INT AUTO_INCREMENT PRIMARY KEY,
+    type ENUM(('article', 'video', 'pdf', 'course')),
+    resource_name VARCHAR(255),
+    resource_description TEXT,
+    content TEXT,
+    suggested_skill INT,
+    mentor_id INT,
+    FOREIGN KEY (mentor_id) REFERENCES mentors(mentor_id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE stories (
+    story_id INT AUTO_INCREMENT PRIMARY KEY,
+    story_name VARCHAR(255),
+    story_description TEXT,
+    thumbnail VARCHAR(255),
+    content TEXT,
+    author INT,
+    suggested_skill INT,
+    FOREIGN KEY (author) REFERENCES users(user_id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE messages (
+    message_id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT,
+    receiver_id INT,
+    content TEXT,
+    FOREIGN KEY (sender_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE user_connections (
+    connection_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id_1 INT,
+    user_id_2 INT,
+    status ENUM('pending', 'connected', 'blocked') DEFAULT 'pending',
+    connection_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id_1) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id_2) REFERENCES users(user_id) ON DELETE CASCADE,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE mentor_student_connections (
+    connection_id INT AUTO_INCREMENT PRIMARY KEY,
+    mentor_id INT,
+    student_id INT,
+    status ENUM('pending', 'active', 'rejected') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (mentor_id) REFERENCES mentors(mentor_id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(user_id) ON DELETE CASCADE
+);

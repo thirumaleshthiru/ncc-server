@@ -1,0 +1,66 @@
+
+ 
+authController
+    register
+    login
+    sendLink
+    verifyLink
+    forgotPassword (resets password for a user)
+
+userController
+    getProfileById (fetch user details, bio, and profile picture by user ID)
+    updateProfile (update user details such as bio, profile picture, or current semester)
+    deleteProfile (delete user and cascade dependencies)
+
+ 
+messagesController
+    sendMessage (send a message from one user to another)
+    getMessage (retrieve a specific message by ID)
+    deleteMessage (delete a message by ID)
+    getMessagesByUser (fetch all messages for a user ID)
+
+connectionsController
+    sendConnection (send a connection request to another user)
+    decideConnection (accept or reject a connection request)
+    removeConnection (remove an existing connection)
+    getConnections (fetch user connections by user ID, only for students)
+    
+
+mentorConnectionController
+    sendMentorConnection (send a connection request to a mentor)
+    decideMentorConnection (accept or reject a mentorship request)
+    getMentorConnections (fetch mentor-student connections for a specific mentor)
+    myMentorsByUserId(fetch the mentors of user based on his id)
+
+skillsController (admin only)
+      addSkill (create a new skill for users)
+      deleteSkill (remove an existing skill)
+
+userSkillsController
+    addSkill (assign a skill to a user)
+    deleteSkill (remove a skill from a user)
+    getSkills (fetch skills of a specific user by user ID)
+
+jobsController  
+    getJobsById (fetch job postings based on user skills by user_id)
+    getJobsBasedOnQuery (fetch jobs matching a specific squery)
+    getJobsBasedOnSkill (fetch jobs based on the skill with our database table skills)
+
+resourcesController (mentor only)
+    addResource (add a learning resource like article, video, or course)
+    updateResource (update resource details such as description or content)
+    deleteResource (remove an existing resource)
+    getResourcesBySkill (fetch resources related to a specific skill)
+    getMyResources (fetch resources created by a mentor)
+    getResource(fetch resource by resource id)
+
+mentorController (mentor only)
+    getMyStudents (fetch all students connected to a mentor)
+    
+
+storiesController
+    addStory
+    deleteStory
+    updateStory
+    getStory(by story id)
+    getStroies(by user id)

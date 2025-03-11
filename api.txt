@@ -1,0 +1,34 @@
+const axios = require('axios');
+
+const options = {
+  method: 'POST',
+  url: 'https://jobs-search-api.p.rapidapi.com/getjobs',
+  headers: {
+    'x-rapidapi-key': 'edee8d2e85msh08378ffdaae5571p1138ccjsn37fcb851a2ff',
+    'x-rapidapi-host': 'jobs-search-api.p.rapidapi.com',
+    'Content-Type': 'application/json'
+  },
+  data: {
+    search_term: 'web',
+    location: 'india',
+    results_wanted: 20,
+    site_name: [
+      'indeed',
+      'linkedin',
+      'zip_recruiter',
+      'glassdoor'
+    ],
+    distance: 50,
+    job_type: 'fulltime',
+    is_remote: false,
+    linkedin_fetch_description: false,
+    hours_old: 72
+  }
+};
+
+try {
+	const response = await axios.request(options);
+	console.log(response.data);
+} catch (error) {
+	console.error(error);
+}
