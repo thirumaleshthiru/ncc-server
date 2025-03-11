@@ -94,7 +94,7 @@ export const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const verificationLink = generateRandomHexString(10);
-        const verificationUrl = `http://localhost:3000/api/auth/verify/${verificationLink}`;
+        const verificationUrl = `https://ncc-server-production.up.railway.app/api/auth/verify/${verificationLink}`;
 
         const emailSent = await sendEmail("thirumalesh579@zohomail.in", email, "Verify Your Account", `Click here to verify your account: ${verificationUrl}`);
         if (!emailSent) {
