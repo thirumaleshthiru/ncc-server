@@ -15,8 +15,8 @@ const sendConnection = async (req, res) => {
     const [existingConnections] = await connection.query(`
       SELECT * 
       FROM user_connections 
-      WHERE (sender_id = ? AND receiver_id = ?) 
-         OR (sender_id = ? AND receiver_id = ?)
+      WHERE (user_id_1 = ? AND user_id_2 = ?) 
+         OR (user_id_1 = ? AND user_id_2 = ?)
     `, [senderId, receiverId, receiverId, senderId]);
 
     if (existingConnections.length > 0) {
@@ -26,7 +26,7 @@ const sendConnection = async (req, res) => {
 
     // Insert the connection as a new pending request
     await connection.query(`
-      INSERT INTO user_connections (sender_id, receiver_id, status)
+      INSERT INTO user_connections (user_id_1, user_id_2, status)
       VALUES (?, ?, 'pending')
     `, [senderId, receiverId]);
 
@@ -123,13 +123,14 @@ const getConnections = async (req, res) => {
   try {
     connection = await pool.getConnection();
 
+    // Fixed query with correct column names
     const [rows] = await connection.query(`
       SELECT uc.connection_id, u.user_id, u.name, u.role, u.college, u.profile_pic
-      FROM user_connections uc
-      JOIN users u 
-      ON (uc.sender_id = ? AND uc.receiver_id = u.user_id) 
-      OR (uc.receiver_id = ? AND uc.sender_id = u.user_id)
-      WHERE (uc.sender_id = ? OR uc.receiver_id = ?)
+      FROM user_connections AS uc
+      JOIN users AS u 
+      ON (uc.user_id_1 = ? AND uc.user_id_2 = u.user_id) 
+      OR (uc.user_id_2 = ? AND uc.user_id_1 = u.user_id)
+      WHERE (uc.user_id_1 = ? OR uc.user_id_2 = ?)
       AND uc.status = 'connected'
     `, [userId, userId, userId, userId]);
 
@@ -152,11 +153,12 @@ const getRequests = async (req, res) => {
   try {
     connection = await pool.getConnection();
 
+    // Fixed query with correct column names
     const [rows] = await connection.query(`
       SELECT uc.connection_id, u.user_id, u.name, u.role, u.college, u.profile_pic
-      FROM user_connections uc
-      JOIN users u ON uc.sender_id = u.user_id
-      WHERE uc.receiver_id = ?
+      FROM user_connections AS uc
+      JOIN users AS u ON uc.user_id_1 = u.user_id
+      WHERE uc.user_id_2 = ?
       AND uc.status = 'pending'
     `, [userId]);
 
