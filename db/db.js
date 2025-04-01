@@ -1,13 +1,13 @@
 import mysql from 'mysql2/promise';
 
 export const pool = mysql.createPool({
-    host: "localhost", //'srv1752.hstgr.io',
-    user: "root",//'u607585719_test',
-    password: "Thirumys@79",//'Test@879',
-    database: "narayana_connect"//'u607585719_test',
-    //waitForConnections: true,
-    //connectionLimit: 10, // Adjust based on your needs
-    //queueLimit: 0
+    host: 'srv1752.hstgr.io',
+    user:  'u607585719_test',
+    password:  'Test@879',
+    database :'u607585719_test',
+     waitForConnections: true,
+     connectionLimit: 10, // Adjust based on your needs
+    queueLimit: 0
 });
 
 const connectToDatabase = async () => {
