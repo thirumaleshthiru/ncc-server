@@ -23,7 +23,7 @@ const fetchJobsForSkill = async (skill, location, jobType) => {
         date_posted: 'all'
       },
       headers: {
-        'x-rapidapi-key': 'eda0ba36cemsh610e054c069e9d5p14e423jsn57a9a476a506',
+        'x-rapidapi-key': 'e0bcef5264msha9eb9cf48944f7dp1fe146jsnaad84f32f2db',
         'x-rapidapi-host': 'jsearch.p.rapidapi.com'
       }
     };
